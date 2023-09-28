@@ -1,48 +1,34 @@
-import { Component } from 'react'
-import Header from './Header/Header'
-import ToDoList from './ToDoList/ToDoList'
-import Modal from './Modal/Modal'
-import FormLogin from './FormLogin/FormLogin'
+// import { useState } from 'react'
+import { Routes, Route } from 'react-router-dom';
+import Layout from './Layout/Layout';
+// import { nanoid } from 'nanoid'
+// import { Toaster } from 'react-hot-toast'
 
-import { nanoid } from 'nanoid'
+// import Header from './Header/Header'
+// import TestUseMemo from './TestUseMemo/TestUseMemo'
 
-class App extends Component {
-	state = {
-		isShowModal: false,
-	}
+import HomePage from './pages/HomePage';
+import NewsPage from './pages/NewsPage';
+import ToDoPage from './pages/ToDoPage';
+import ToDoDetails from './ToDo/ToDoDetails';
+// import ToDoList from './ToDoList/ToDoList'
+// import Modal from './Modal/Modal'
+// import FormLogin from './FormLogin/FormLogin'
+// import Search from './Search/Search'
+// import ContentInfo from './ContentInfo/ContentInfo'
+// import Counter from './Counter/Counter'
 
-	showModal = () => {
-		this.setState({ isShowModal: true })
-	}
+const App = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<HomePage />} />
+        <Route path="news" element={<NewsPage />} />
+        <Route path="todo" element={<ToDoPage />} />
+        <Route path="todo/:id" element={<ToDoDetails />} />
+      </Route>
+    </Routes>
+  );
+};
 
-	closeModal = () => {
-		this.setState({ isShowModal: false })
-	}
-
-	createUser = (data) => {
-		const newUser = {
-			...data,
-			id: nanoid(),
-		}
-		console.log('newUser :>> ', newUser)
-	}
-
-	render() {
-		return (
-			<div className='container'>
-				<Header showModal={this.showModal} />
-				<ToDoList />
-				{this.state.isShowModal && (
-					<Modal closeModal={this.closeModal}>
-						<FormLogin
-							closeModal={this.closeModal}
-							createUser={this.createUser}
-						/>
-					</Modal>
-				)}
-			</div>
-		)
-	}
-}
-
-export default App
+export default App;
