@@ -1,43 +1,73 @@
-import React, { Component } from 'react'
-import ToDo from '../ToDo/ToDo'
-import todo from '../../todo.json'
+import { useEffect, useState } from 'react';
 
-class ToDoList extends Component {
-	state = {
-		todoList: todo,
-	}
+import toast from 'react-hot-toast';
 
-	handleCheckCompleted = (id) => {
-		this.setState((prevState) => ({
-			todoList: prevState.todoList.map((todo) =>
-				todo.id === id ? { ...todo, completed: !todo.completed } : todo
-			),
-		}))
-	}
+import ToDo from '../ToDo/ToDo';
+import FormToDo from '../FormToDo/FormToDo';
 
-	handleDelete = (id) => {
-		this.setState((prev) => ({
-			todoList: prev.todoList.filter((todo) => todo.id !== id),
-		}))
-	}
+import { nanoid } from 'nanoid';
 
-	render() {
-		return (
-			<>
-				<h1>My To-Do list</h1>
-				<ul className='list-group list-group-flush'>
-					{this.state.todoList.map((todo) => (
-						<ToDo
-							key={todo.id}
-							todo={todo}
-							handleCheckCompleted={this.handleCheckCompleted}
-							handleDelete={this.handleDelete}
-						/>
-					))}
-				</ul>
-			</>
-		)
-	}
-}
+const ToDoList = () => {
+  const [todoList, setTodoList] = useState('');
 
-export default ToDoList
+  useEffect(() => {
+    const localTodo = localStorage.getItem('todo');
+    if (localTodo) setTodoList(JSON.parse(localTodo));
+  }, []);
+
+  useEffect(() => {
+    todoList && localStorage.setItem('todo', JSON.stringify(todoList));
+  }, [todoList]);
+
+  const handleCheckCompleted = id => {
+    setTodoList(prevTodoList => {
+      return prevTodoList.map(todo =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      );
+    });
+  };
+
+  const handleDelete = id => {
+    setTodoList(prevTodoList => {
+      return prevTodoList.filter(todo => todo.id !== id);
+    });
+
+    toast.error('Delete successfully');
+  };
+
+  const addToDo = value => {
+    setTodoList(prevTodoList => {
+      return [
+        ...prevTodoList,
+        {
+          id: nanoid(),
+          title: value,
+          completed: false,
+        },
+      ];
+    });
+
+    toast.success('Create successfully');
+  };
+
+  return (
+    <>
+      <h1>My To-Do list</h1>
+      <FormToDo addToDo={addToDo} />
+      {todoList && (
+        <ul className="list-group list-group-flush">
+          {todoList.map(todo => (
+            <ToDo
+              key={todo.id}
+              todo={todo}
+              handleCheckCompleted={handleCheckCompleted}
+              handleDelete={handleDelete}
+            />
+          ))}
+        </ul>
+      )}
+    </>
+  );
+};
+
+export default ToDoList;
