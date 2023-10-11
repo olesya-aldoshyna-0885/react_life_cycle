@@ -1,7 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const ToDo = ({ todo, handleCheckCompleted, handleDelete }) => {
+  const location = useLocation();
+  // console.log('location', location);
+
   return (
     <li className="list-group-item">
       <div className="row justify-content-between">
@@ -14,7 +17,13 @@ const ToDo = ({ todo, handleCheckCompleted, handleDelete }) => {
               onChange={() => handleCheckCompleted(todo.id)}
             />
           )}
-          <Link to={todo.id}> {todo.title}</Link>
+          {handleCheckCompleted ? (
+            <Link to={todo.id} state={location}>
+              {todo.title}
+            </Link>
+          ) : (
+            <h2>{todo.title}</h2>
+          )}
         </div>
         <div className="col">
           {handleDelete && (

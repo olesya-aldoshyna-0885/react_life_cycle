@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import Search from './../Search/Search';
 import ContentInfo from './../ContentInfo/ContentInfo';
 
@@ -9,10 +9,10 @@ const NewsPage = () => {
     setSearchText(searchText);
   };
   return (
-    <>
+    <Suspense>
       <Search handleSearch={handleSearch} />
       <ContentInfo searchText={searchText} />
-    </>
+    </Suspense>
   );
 };
 
