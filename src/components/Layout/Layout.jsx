@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
@@ -32,7 +32,9 @@ const Layout = () => {
         }}
       />
       <Header showModal={showModal} />
-      <Outlet />
+      <Suspense fallback={<h1>Loading...</h1>}>
+        <Outlet />
+      </Suspense>
       {isShowModal && (
         <Modal closeModal={closeModal}>
           <FormLogin closeModal={closeModal} createUser={createUser} />
